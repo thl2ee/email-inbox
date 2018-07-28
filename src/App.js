@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Indexes from './components/Indexes'
 import './App.css';
 
 class App extends Component {
@@ -36,9 +37,14 @@ class App extends Component {
   }
 
   render() {
+    let emailIndexes = this.state.emails.map((email) => ({
+      name: email.from.name,
+      title: email.subject,
+      description: email.description
+    }));
     return (
       <div className="App">
-        Hello world!
+        <Indexes indexes={emailIndexes} />
       </div>
     );
   }
