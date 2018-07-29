@@ -6,7 +6,8 @@
   "dependencies": {
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
-    "react-scripts": "1.1.4"
+    "react-scripts": "1.1.4",
+    "typeface-roboto": "0.0.54"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -23,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/thl2ee/email-inbox/issues"
   },
-  "homepage": "https://github.com/thl2ee/email-inbox#readme"
+  "homepage": "https://github.com/thl2ee/email-inbox#readme",
+  "devDependencies": {
+    "babel-plugin-react-html-attrs": "^2.1.0"
+  }
 }
