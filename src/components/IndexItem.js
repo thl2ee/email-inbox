@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import '../styles/IndexItem.css';
 
 class IndexItem extends Component {
   constructor() {
