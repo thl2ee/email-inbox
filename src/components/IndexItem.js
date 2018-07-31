@@ -17,23 +17,22 @@ class IndexItem extends Component {
     }
   }
   
-  render = () =>  {
-    const getFirstCharacterFromString = (str) => (
-      (str || "").charAt(0)
-    );
-    let words = this.state.index.name.split(" ");
-    let label = getFirstCharacterFromString(
-      (!words) ? "" : words[0]
-    );
-    
-    if (words.length === 2) {
-      label = `${
-        getFirstCharacterFromString(words[0])
-      }${
-        getFirstCharacterFromString(words[1])
-      }`;
+  _getFirstCharacterFromString = (str) => (str || "").charAt(0);
+  
+  _getLabelByName = (name) => {
+    if (!name && (typeof name !== "string")) {
+      return "";
     }
 
+    let words = name.split(" ") || [];
+    const firstLetter = this._getFirstCharacterFromString(words[0])
+
+    return (words.length === 2) ? 
+      `${firstLetter}${this._getFirstCharacterFromString(words[1])}` :
+      firstLetter;
+  }
+  
+  render = () =>  {
     return (
       <div className="Indexes">
         <div className="index-item">
@@ -46,7 +45,7 @@ class IndexItem extends Component {
                 ]
               }} >
               <div className="index-item-icon-circle-label">
-                {label}
+                {this._getLabelByName(this.state.index.name)}
               </div>
             </div> 
           </div>

@@ -3,7 +3,6 @@ import EmailIndexes from './components/EmailIndexes';
 import "typeface-roboto";
 
 const emailService = require('./services/email');
-const DEFAULT_ROW_NUMBER = 100;
 const MAX_ROW_NUMBER = 300000;
 
 class App extends Component {
