@@ -1,69 +1,51 @@
 import React, { Component } from 'react';
-import  EmailIndexes from './components/EmailIndexes'
+import EmailIndexes from './components/EmailIndexes';
 import "typeface-roboto";
 
+const emailService = require('./services/email');
+const DEFAULT_ROW_NUMBER = 100;
 const MAX_ROW_NUMBER = 300000;
-const DEFAULT_ROW_NUMBER = 100000;
-// TODO(thanwarin.p): get email info from mock's server
-const SAMPLE_EMAILS = [{
-    "from" : {
-    "name" : "Now TV",
-    "email" : "nowtv@test.com"
-    },
-    "dateTime": "11:35",
-    "subject" : "Grab another Pass, you need to be watching this...",
-    "body" : "Oscar winners Sir Anthony Hopkins and Ed Harris join an impressive cast boasting the likes of Thandie Newton, James Marsden and Jeffrey Wright."
-},  {
-    "from" : {
-    "name" : "Investopedia Terms",
-    "email" : "investopedia@test.com"
-    },
-    "dateTime": "Yesterday, 11:35",
-    "subject" : "What is 'Fibonanci Retracement'?",
-    "body" : "Fibonacci retracement is a term used in technical analysis that refers to areas of support (price stops going lower) or resistance (price stops going higher)."
-}, {
-    "from" : {
-    "name" : "ASICS Greater Manchester Marathon ",
-    "email" : "events@human-race.co.uk"
-    },
-    "dateTime": "20/08/2018, 14:40",
-    "subject" : "Your chance to take on the marathon",
-    "body" : "Do you feel inspired to take on one of Europe's most highly regarded and popular marathons?"
-}];
 
 class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      numberOfRow: DEFAULT_ROW_NUMBER,
-      emails: SAMPLE_EMAILS.concat(
-        this.buildMockEmails(
-          DEFAULT_ROW_NUMBER,
-          SAMPLE_EMAILS.length
-        )
-      )
+      numberOfRow: 0,
+      emails: []
     };
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this._handleChange = this._handleChange.bind(this);
+    this._handleSubmit = this._handleSubmit.bind(this);
+    this.componentDidMount = this.componentDidMount.bind(this);
   }
 
-  buildMockEmails = (numberOfRow, specifiedIndex = 0) => {
+  _addPrefixForTime = (timeNumber) => (
+    timeNumber < 10 ? `0${timeNumber}` : timeNumber
+  );
+
+  _buildMockEmails = (numberOfRow) => {
     let emails = [];
-    for (let i = numberOfRow - specifiedIndex; i > 0; i--) {
-      emails.push({
-        ...SAMPLE_EMAILS[2],
+    for (let i = numberOfRow; i > 0; i--) {
+      const rowIndex = numberOfRow - i + 1;
+      emails.push(new emailService.Email({
         from: {
-            ...SAMPLE_EMAILS[2].from,
-            name: `Name of row #${numberOfRow - i + 1}`
-        }
-      });
+          name: `Name of row #${rowIndex}`,
+          email: "test@test.com"
+        },
+        dateTime: `${
+          this._addPrefixForTime(rowIndex % 24)
+        }:${
+          this._addPrefixForTime(rowIndex % 59)
+        }`,
+        subject: `Subject of row #${rowIndex}`,
+        body: `Body of row #${rowIndex}`
+      }));
     }
     return emails;
   };
   
-  handleChange = (e) => {
+  _handleChange = (e) => {
     const value = e.target.value;
     this.setState({
       numberOfRow: (
@@ -72,30 +54,43 @@ class App extends Component {
     });
   }
 
-  handleSubmit = (e) =>  {
+  _handleSubmit = (e) =>  {
     const numberOfRow = this.state.numberOfRow;
     if (numberOfRow === this.state.emails.length) {
-      return e.preventDefault();
+      e.preventDefault();
+      return;
     }
 
     this.setState({
-      emails: this.buildMockEmails(numberOfRow)
+      emails: this._buildMockEmails(numberOfRow)
     });
     e.preventDefault();
   }
 
+  componentDidMount = () => (
+    emailService.getEmails()
+      .then((emails) => {
+        this.setState({
+          numberOfRow: emails.length || 0,
+          emails: emails.slice(0) || []
+        })
+      }).catch((error) => error)
+  );
+
   render = () => {
     return (
       <div className="App">
-        <form onSubmit={this.handleSubmit}>
+
+        <form onSubmit={this._handleSubmit}>
           <label>Number of Row:&nbsp;
             <input 
               type="number"
               value={this.state.numberOfRow} 
-              onChange={this.handleChange} />
+              onChange={this._handleChange} />
           </label>&nbsp;
           <input type="submit" value="Submit" />
         </form>
+
         <EmailIndexes 
           emails={this.state.emails} />
       </div>

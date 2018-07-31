@@ -4,6 +4,16 @@ const Infinite = require('react-infinite');
 
 class Indexes extends Component {
   render = () => {
+    const indexItems = (
+      this.props.indexes
+        .filter((index) => (
+          index && typeof index.id === "number" && 
+          index.name && index.title
+        )).map((index) => (
+            <IndexItem key={"index-"+index.id} index={index} />
+        ))
+    );
+    
     return (
       <div className="Indexes"
         style={{
@@ -13,11 +23,7 @@ class Indexes extends Component {
         <Infinite 
           containerHeight={520} 
           elementHeight={100} >
-            {
-              this.props.indexes.map((index) => (
-                <IndexItem key={index.id} index={index} />
-              ))
-            }
+            {indexItems}
         </Infinite>
         
       </div>

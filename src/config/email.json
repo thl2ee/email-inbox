@@ -1,0 +1,9 @@
+{
+    "host": "http://private-e1c81-emails5.apiary-mock.com",
+    "endpoints": {
+        "getEmails": {
+            "path": "/emails",
+            "method": "get"
+        }
+    }
+}
