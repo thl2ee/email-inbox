@@ -38,8 +38,5 @@
     "babel-eslint": "^8.2.6",
     "babel-plugin-react-html-attrs": "^2.1.0",
     "prettier-eslint": "^8.8.2"
-  },
-  "jest": {
-    "setupTestFrameworkScriptFile": "<rootDir>/src/setupTests.js"
   }
 }
