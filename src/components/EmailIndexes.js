@@ -1,49 +1,49 @@
-import React, { Component}  from 'react';
+import React, { Component }  from 'react';
 import Indexes from './Indexes';
 import '../styles/EmailIndexes.css';
 
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faAngleDown)
+
+const EMAIL_INDEXES_HEIGHT = 600;
+
 class EmailIndexes extends Component {
-    constructor() {
-        super();
-        // TODO(thanwarin.p): get email info from mock's server
-        this.state = {
-            emails: [{
-                "from" : {
-                "name" : "Now TV",
-                "email" : "nowtv@test.com"
-                },
-                "dateTime": "11:35",
-                "subject" : "Grab another Pass, you need to be watching this...",
-                "body" : "Oscar winners Sir Anthony Hopkins and Ed Harris join an impressive cast boasting the likes of Thandie Newton, James Marsden and Jeffrey Wright."
-            },  {
-                "from" : {
-                "name" : "Investopedia Terms",
-                "email" : "investopedia@test.com"
-                },
-                "dateTime": "Yesterday, 11:35",
-                "subject" : "What is 'Fibonanci Retracement'?",
-                "body" : "Fibonacci retracement is a term used in technical analysis that refers to areas of support (price stops going lower) or resistance (price stops going higher)."
-            }, {
-                "from" : {
-                "name" : "ASICS Greater Manchester Marathon ",
-                "email" : "events@human-race.co.uk"
-                },
-                "dateTime": "20/08/2018, 14:40",
-                "subject" : "Your chance to take on the marathon",
-                "body" : "Do you feel inspired to take on one of Europe's most highly regarded and popular marathons?"
-            }]
-        };
-    }
+    shouldComponentUpdate = (nextProps) => (
+        this.props.emails.length !== nextProps.emails.length
+    );
 
-
-    render() {
-        return <Indexes indexes={
-            this.state.emails.map((email) => ({
-                name: email.from.name,
-                title: email.subject,
-                description: email.body,
-                dateTime: email.dateTime
-            }))} styleName="indexes-emails" />
+    render = () => {
+        let id = 0;
+        return (
+            <div className="EmailIndexes">
+                <div className="email-indexes">
+                    <div className="email-indexes-header">
+                        <div className="email-indexes-header-title">
+                            Inbox
+                        </div>
+                        <div className="email-indexes-header-filter">
+                            Filter&nbsp;<FontAwesomeIcon icon="angle-down" />
+                        </div>
+                    </div>
+                    <div className="email-indexes-scroll">
+                        <Indexes 
+                            height={EMAIL_INDEXES_HEIGHT}
+                            indexes={
+                                this.props.emails.map((email) => ({
+                                    id: id++,
+                                    name: email.from.name,
+                                    title: email.subject,
+                                    description: email.body,
+                                    dateTime: email.dateTime
+                                }))
+                            } />
+                    </div>
+                </div>
+            </div>
+        );
     }
 }
 
